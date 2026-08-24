@@ -2,7 +2,15 @@
 __pycache__/
 *.pyc
 
-data/
-public_data/
+# Local or protected datasets (root folders only).
+/data/
+/public_data/
 
+# Generated research artifacts.
+/artifacts/
+/runs/
+/.codex_artifacts/
+
+# Data tables can contain derived or patient-linked information.
 *.csv
+!examples/*.csv

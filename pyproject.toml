@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lumbar-stenosis-ai"
+version = "0.2.0"
+description = "Research prototype for lumbar MRI feature extraction and incremental ART-MAP classification"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=2.0",
+  "pillow>=11",
+  "pydicom>=3.0,<4",
+  "torch>=2.5",
+  "torchvision>=0.20",
+]
+
+[project.scripts]
+lumbar-stenosis-ai = "lumbar_stenosis_ai.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["lumbar_stenosis_ai*"]

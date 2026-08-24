@@ -1,19 +1,7 @@
-import subprocess
-import sys
+"""Backward-compatible launcher for the package command-line interface."""
+
+from lumbar_stenosis_ai.cli import main
 
 
-print("Step 1: Extracting image features...")
-subprocess.run(
-    [sys.executable, "main.py"],
-    check=True
-)
-
-print()
-print("Step 2: Running online classifier demo...")
-subprocess.run(
-    [sys.executable, "classifier_demo.py"],
-    check=True
-)
-
-print()
-print("Pipeline completed successfully.")
+if __name__ == "__main__":
+    raise SystemExit(main())

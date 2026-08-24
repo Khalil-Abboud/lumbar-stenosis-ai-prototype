@@ -1,0 +1,3 @@
+sample_id,patient_id,image_path,label,split,plane,level,sequence
+slice_001,patient_001,../data/patient_001_L4_L5_axial.dcm,stenosis,train,axial,L4-L5,T2
+slice_002,patient_002,../data/patient_002_L4_L5_axial.dcm,normal,test,axial,L4-L5,T2
