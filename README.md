@@ -41,6 +41,8 @@ class prediction, ART match diagnostics, and test metrics
   F1, and a confusion matrix on unseen test samples only.
 - A command-line interface for validation, feature extraction, training,
   incremental updating, prediction, and a non-medical synthetic self-check.
+- A dataset adapter for the public **Multi-Disorder Annotations for Lumbar
+  Spine Mid-Sagittal Images** PNG collection.
 
 ## Project structure
 
@@ -77,6 +79,20 @@ The same CLI is available through either command:
 python run_pipeline.py --help
 python -m lumbar_stenosis_ai --help
 ```
+
+## Simple desktop interface
+
+Launch the optional Tkinter interface from the activated environment:
+
+```powershell
+python run_gui.py
+```
+
+The interface is a small wrapper around the same validated backend. It can
+select and validate a manifest, start a training run, display its metrics,
+load a saved model, and predict one selected image. Training runs in a worker
+thread so the window remains responsive. The command-line workflow remains
+available for reproducible experiments and automation.
 
 ## Fast technical self-check
 
@@ -116,6 +132,28 @@ Validate a manifest before running an experiment:
 ```powershell
 python run_pipeline.py validate --manifest path\to\manifest.csv
 ```
+
+### Prepare the small public pilot dataset
+
+The Multi-Disorder dataset contains raw sagittal PNG images plus separate
+class masks. Build a T2 binary pilot manifest with:
+
+```powershell
+python run_pipeline.py prepare-multidisorder `
+  --dataset-root "D:\path\to\Multi-Disorder Annotations for Lumbar Spine Mid-Sagittal Images" `
+  --output data\multidisorder_t2_pilot.csv `
+  --max-patients-per-class 100
+```
+
+The adapter labels a patient group `stenosis_present` when at least one of its
+T2 variants has a non-empty `Spinal Stenosis (SS)` mask. Otherwise it uses
+`stenosis_annotation_absent`. Masks define labels only; the model receives the
+original MRI PNG, never the mask. The manifest uses `whole-lumbar` because the
+collection does not provide a reliable per-disc-level stenosis grade.
+
+This is a software-pipeline pilot, not a clinically validated stenosis-grading
+experiment. Absence of a stenosis mask must not be presented as a clinical
+diagnosis of normality.
 
 ## Train and evaluate
 

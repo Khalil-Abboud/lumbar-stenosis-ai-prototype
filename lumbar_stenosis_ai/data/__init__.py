@@ -22,6 +22,12 @@ from .manifest import (
     read_manifest,
     validate_manifest,
 )
+from .multidisorder import (
+    NEGATIVE_LABEL,
+    POSITIVE_LABEL,
+    MultiDisorderPreparationResult,
+    prepare_multidisorder_manifest,
+)
 
 __all__ = [
     "ALLOWED_SPLITS",
@@ -33,12 +39,16 @@ __all__ = [
     "ImageLoadingError",
     "ManifestRecord",
     "ManifestValidationError",
+    "MultiDisorderPreparationResult",
+    "NEGATIVE_LABEL",
     "PatientSplitLeakageWarning",
+    "POSITIVE_LABEL",
     "UnsupportedImageFormatError",
     "load_dicom_image",
     "load_image",
     "load_manifest",
     "load_raster_image",
+    "prepare_multidisorder_manifest",
     "read_image",
     "read_manifest",
     "validate_manifest",

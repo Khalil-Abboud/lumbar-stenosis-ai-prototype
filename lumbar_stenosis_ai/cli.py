@@ -12,7 +12,7 @@ from typing import Any
 import numpy as np
 
 from lumbar_stenosis_ai.config import PipelineConfig
-from lumbar_stenosis_ai.data import load_manifest
+from lumbar_stenosis_ai.data import load_manifest, prepare_multidisorder_manifest
 from lumbar_stenosis_ai.evaluation import classification_metrics
 from lumbar_stenosis_ai.models import FuzzyARTMAPClassifier
 from lumbar_stenosis_ai.pipeline import (
@@ -50,6 +50,23 @@ def build_parser() -> argparse.ArgumentParser:
     validate = subparsers.add_parser("validate", help="Validate an anonymized CSV manifest.")
     validate.add_argument("--manifest", required=True, type=Path)
     validate.add_argument("--allow-empty-labels", action="store_true")
+
+    prepare_multidisorder = subparsers.add_parser(
+        "prepare-multidisorder",
+        help="Create a pilot classification manifest from the public PNG dataset.",
+    )
+    prepare_multidisorder.add_argument("--dataset-root", required=True, type=Path)
+    prepare_multidisorder.add_argument("--output", required=True, type=Path)
+    prepare_multidisorder.add_argument(
+        "--sequence", choices=("T1", "T2"), default="T2"
+    )
+    prepare_multidisorder.add_argument(
+        "--max-patients-per-class",
+        type=int,
+        help="Optional deterministic pilot limit for each binary class.",
+    )
+    prepare_multidisorder.add_argument("--seed", type=int, default=42)
+    prepare_multidisorder.add_argument("--overwrite", action="store_true")
 
     extract = subparsers.add_parser("extract", help="Extract and save 512 ResNet18 features.")
     extract.add_argument("--manifest", required=True, type=Path)
@@ -156,6 +173,15 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "validate":
             result: Any = _validate_command(args)
+        elif args.command == "prepare-multidisorder":
+            result = prepare_multidisorder_manifest(
+                args.dataset_root,
+                args.output,
+                sequence=args.sequence,
+                max_patients_per_class=args.max_patients_per_class,
+                seed=args.seed,
+                overwrite=args.overwrite,
+            ).as_dict()
         elif args.command == "extract":
             output = extract_manifest_features(
                 args.manifest,
